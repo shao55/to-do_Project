@@ -1,0 +1,18 @@
+.footer_main {
+    padding-bottom: 42px;
+    display: flex;
+    justify-content: space-between;
+}
+.footer_p_l {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+}
+.footer_p_r {
+    font-size: 14px;
+    line-height: 18px;
+    opacity: 0.5;
+}
+a {
+    color: inherit;
+}
