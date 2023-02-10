@@ -1,13 +1,13 @@
 import './App.css';
 import Title from './Components/1. Title';
-import ToDoApp from './Components/2. Main';
+import TodoList from './Components/2. Main/index.js';
 import Footer from './Components/3. Footer';
 
 function App() {
   return (
     <div className="App">
       <Title/>
-      <ToDoApp/>
+      <TodoList/>
       <Footer/>
     </div>
   );

@@ -1,90 +1,102 @@
-import React, { Component } from 'react';
+import React, { useState } from "react";
 
-class ToDoItem extends Component {
-  render() {
-    const { text, completed, onClick } = this.props;
+function TodoList() {
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const [filter, setFilter] = useState("all");
+
+    const [todos, setTodos] = useState([
+        { task: "Выучить хуки", completed: false, deleted: false },
+        { task: "Выучить setState", completed: false, deleted: false },
+        { task: "Сделать домашку до лекции", completed: false, deleted: false },
+        { task: "Сделать еженедельный проект", completed: false, deleted: false },
+        { task: "Отдыхать на выходных", completed: false, deleted: false },
+    ]);
+
+    const addTodo = task => {
+        setTodos([...todos, { task, completed: false, deleted: false }]);
+    };
+
+    const completeTodo = index => {
+        const newTodos = [...todos];
+        newTodos[index].completed = true;
+        setTodos(newTodos);
+    };
+
+    const deleteTodo = index => {
+        const newTodos = [...todos];
+        newTodos[index].deleted = true;
+        setTodos(newTodos);
+    };
+
+    const restoreTodo = index => {
+        const newTodos = [...todos];
+        newTodos[index].deleted = false;
+        setTodos(newTodos);
+    };
+
+    const permanentlyDeleteTodo = index => {
+        const newTodos = [...todos];
+        newTodos.splice(index, 1);
+        setTodos(newTodos);
+    };
+
+    const filteredTodos = todos.filter(todo => {
+        if (filter === "active") return !todo.completed && !todo.deleted;
+        if (filter === "completed") return todo.completed && !todo.deleted;
+        if (filter === "deleted") return todo.deleted;
+        return true;
+    });
+  
     return (
-      <li
-        style={{
-          textDecoration: completed ? 'line-through' : 'none'
-        }}
-        onClick={onClick}
-      >
-        {text}
-      </li>
-    );
-  }
-}
-
-class ToDoList extends Component {
-  render() {
-    const { items, onItemClick } = this.props;
-    return (
-      <ul>
-        {items.map((item, index) => (
-          <ToDoItem key={index} {...item} onClick={() => onItemClick(index)} />
-        ))}
-      </ul>
-    );
-  }
-}
-
-class ToDoApp extends Component {
-  state = {
-    items: [
-      { text: 'Learn React', completed: false },
-      { text: 'Build ToDo App', completed: false },
-      { text: 'Profit', completed: false }
-    ],
-    filter: 'all'
-  };
-
-  handleItemClick = index => {
-    const newItems = [...this.state.items];
-    newItems[index].completed = !newItems[index].completed;
-    this.setState({ items: newItems });
-  };
-
-  handleFilterChange = filter => {
-    this.setState({ filter });
-  };
-
-  handleAddClick = () => {
-    const newItems = [...this.state.items];
-    newItems.push({ text: this.input.value, completed: false });
-    this.setState({ items: newItems });
-    this.input.value = '';
-  };
-
-  handleDeleteClick = index => {
-    const newItems = [...this.state.items];
-    newItems.splice(index, 1);
-    this.setState({ items: newItems });
-  };
-
-  filteredItems() {
-    const { items, filter } = this.state;
-    if (filter === 'all') {
-      return items;
-    }
-    return items.filter(item => (filter === 'completed' ? item.completed : !item.completed));
-  }
-
-  render() {
-    return (
-      <div>
-        <input type="text" ref={input => (this.input = input)} />
-        <button onClick={this.handleAddClick}>Add</button>
-        <ToDoList items={this.filteredItems()} onItemClick={this.handleItemClick} />
         <div>
-          Show:
-          <button onClick={() => this.handleFilterChange('all')}>All</button>
-          <button onClick={() => this.handleFilterChange('active')}>Active</button>
-          <button onClick={() => this.handleFilterChange('completed')}>Completed</button>
+            <h1>ToDo List</h1>
+            <div>
+                <button onClick={() => setFilter("all")}>All</button>
+                <button onClick={() => setFilter("active")}>Active</button>
+                <button onClick={() => setFilter("completed")}>Completed</button>
+                <button onClick={() => setFilter("deleted")}>Deleted</button>
+                <div>
+                    <button onClick={() => setModalOpen(true)}>Add Todo</button>
+                        {modalOpen && (
+                            <div>
+                                <form onSubmit={e => {
+                                    e.preventDefault();
+                                    addTodo(e.target.todoInput.value);
+                                    e.target.todoInput.value = "";
+                                    setModalOpen(false); // Закрываем модальное окно после добавления задачи
+                                }}>
+                                    <input type="text" name="todoInput" />
+                                    <button type="submit">Add Todo</button>
+                                </form>
+                                <button onClick={() => setModalOpen(false)}>Close</button>
+                            </div>
+                        )}
+                </div>
+            </div>
+            <div>
+                {filteredTodos.map((todo, index) => (
+                    <div key={index}>
+                        <p style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.task}</p>
+                        {!todo.completed && !todo.deleted && (
+                            <button onClick={() => completeTodo(index)}>Complete</button>
+                        )}
+                        {!todo.deleted && (
+                            <button onClick={() => deleteTodo(index)}>Delete</button>
+                        )}
+                        {todo.deleted && (
+                            <>
+                                <button onClick={() => restoreTodo(index)}>Restore</button>
+                                <button onClick={() => permanentlyDeleteTodo(index)}>
+                                Permanently Delete
+                                </button>
+                            </>
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
-      </div>
     );
-  }
-}
-
-export default ToDoApp;
+};
+    
+export default TodoList;
