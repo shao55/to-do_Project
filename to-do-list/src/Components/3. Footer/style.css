@@ -1,7 +1,9 @@
 .footer_main {
+    padding-top: 42px;
     padding-bottom: 42px;
     display: flex;
     justify-content: space-between;
+    flex-shrink: 0;
 }
 .footer_p_l {
     font-size: 14px;

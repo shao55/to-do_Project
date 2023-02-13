@@ -1,0 +1,148 @@
+.mainWrapper {
+    flex: 1 0 auto;
+}
+.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 11px 24px;
+    gap: 8px;
+    width: 87px;
+    height: 40px;
+    background: rgba(8, 30, 52, 0.42);
+    color: #FFFFFF;
+    border-radius: 100px;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: center;
+    border: 0;
+    /* flex: none;
+    order: 2;
+    flex-grow: 0; */
+}
+.notActive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 11px 24px;
+    gap: 8px;
+    width: 84px;
+    height: 40px;
+    background: linear-gradient(0deg, rgba(8, 30, 52, 0.05), rgba(8, 30, 52, 0.05)), #F0F0F0;
+    border-radius: 100px;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: center;
+    border: 0;
+    /* flex: none;
+    order: 2;
+    flex-grow: 0; */
+}
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+.filterbuttons {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+}
+.plusButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px;
+    gap: 8px;
+    width: 52px;
+    height: 52px;
+    background-color: #081E34;
+    border-radius: 100px;
+    border: 0;
+    background-image: url('./img/plus.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.addInput {
+    padding-left: 15px;
+    padding-top: 15px;
+    width: 236px;
+    height: 105px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    border: 0;
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: left;
+    resize: none;
+}
+.modal {
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start; */
+    padding: 16px;
+    gap: 10px;
+
+    position: absolute;
+    width: 268px;
+    height: 234px;
+    left: -338px;
+    top: -215px;
+
+    background: #E4E6E7;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.16);
+    border-radius: 12px;
+}
+.addbutton {
+    position: relative;
+}
+.modalAddButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    padding: 8px 24px;
+    gap: 8px;
+    width: 76px;
+    height: 40px;
+    background: #081E34;
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 1;
+    border-radius: 100px;
+    border: 0;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: #FFFFFF;
+}
+.modalCloseButton {
+    position: absolute;
+    top: -8px;
+    left: 283px;
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border-radius: 100px;
+    border: 0;
+    background-image: url('./img/close.png');
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
