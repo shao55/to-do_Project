@@ -127,7 +127,6 @@ function TodoList() {
                                     <textarea className="addInput" placeholder="Your text" type="text" name="todoInput" />
                                     <button className="modalAddButton" type="submit">Add</button>
                                 </form>
-                                <button className="modalCloseButton" onClick={toggleModal}></button>
                             </div>
                         )}
                 </div>
