@@ -14,6 +14,7 @@ function TodoList() {
     // Hook для отображения модального окна списка задач, по умолчанию - "false"
     const [toDoModalOpen, setToDoModalOpen] = useState(false);
 
+    // Hook для отслеживания координат кликом
     const [selectedButtonCoordinates, setSelectedButtonCoordinates] = useState({ x: 0, y: 0 });
 
     // Hook для улавливания индекса задачи, на которую нажал пользователь, по умолчанию - null (значит никакой)
@@ -42,6 +43,13 @@ function TodoList() {
         newTodos[index].completed = true;
         setTodos(newTodos);
     };
+
+    // Отмена завершения задачи
+    const uncompleteTodo = index => {
+        const newTodos = [...todos];
+        newTodos[index].completed = false;
+        setTodos(newTodos);
+      };
 
     // Удаление задачи
     const deleteTodo = index => {
@@ -147,9 +155,9 @@ function TodoList() {
                                 top: selectedButtonCoordinates.y,
                                 left: selectedButtonCoordinates.x,
                               }}>
-                                {!todo.completed && !todo.deleted && (
+                                {/* {!todo.completed && !todo.deleted && (
                                     <button className="toDoBtn" onClick={() => completeTodo(index)}><img src={moveBack} alt='img' />Complete</button>
-                                )}
+                                )} */}
                                 {!todo.deleted && (
                                     <button className="toDoBtn" onClick={() => deleteTodo(index)}><img src={trash} alt='img' />Move to Trash</button>
                                 )}
@@ -161,6 +169,23 @@ function TodoList() {
                                 )}
                             </div>
                         )}
+                        <div className="checkBox">
+                        <input
+                            type="checkbox"
+                            // Дотягиваемся до значения в todos
+                            checked={todos[index].completed}
+                            onChange={() => {
+                                if (todos[index].completed) {
+                                    // Убираем выполнение
+                                uncompleteTodo(index);
+                                } else {
+                                    // Завершаем задачу
+                                completeTodo(index);
+                                }
+                            }}
+                            />
+                            <label for="completeCheckbox"></label>
+                        </div>
                         <p className="toDoTask" style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.task}</p>
                     </div>
                 ))}

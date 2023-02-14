@@ -178,3 +178,9 @@
 .toDoBtn:hover {
     background: rgba(8, 30, 52, 0.2);
 }
+.checkBox {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    margin-right: 12px;
+}
