@@ -2,14 +2,22 @@
 import React, { useState } from "react";
 // Импортируем стили
 import './style.css'
+// Импорт картинок
+import trash from './img/trash.png';
+import moveBack from './img/moveback.png';
 
 function TodoList() {
 
-    // Hook для отображения модального окна, по умолчанию - "false"
+    // Hook для отображения модального окна добавления задач, по умолчанию - "false"
     const [addModalOpen, setModalOpen] = useState(false);
 
-    // Hook для отслеживания нажатия кнопки
-    const [activeFilter, setActiveFilter] = useState("todo");   
+    // Hook для отображения модального окна списка задач, по умолчанию - "false"
+    const [toDoModalOpen, setToDoModalOpen] = useState(false);
+
+    const [selectedButtonCoordinates, setSelectedButtonCoordinates] = useState({ x: 0, y: 0 });
+
+    // Hook для улавливания индекса задачи, на которую нажал пользователь, по умолчанию - null (значит никакой)
+    const [selectedTodoIndex, setSelectedTodoIndex] = useState(null);
 
     // Hook для фильтрации отображения задач на главной странице, по умолчанию - "all"
     const [filter, setFilter] = useState("todo");
@@ -66,12 +74,28 @@ function TodoList() {
 
     const handleFilter = filter => {
         setFilter(filter);
-        setActiveFilter(filter);
     };
     
-  
+    // Функция переключателя модального окна добавления задач
+    const toggleModal = () => {
+        setModalOpen(!addModalOpen)
+    }
+
+    // Функция переключателя модального окна списка задач
+    const toggleToDoModal = (event, index) => {
+        setSelectedButtonCoordinates({
+            x: event.target.offsetLeft,
+            y: event.target.offsetTop,
+          });
+        // Передача индекса нажатой кнопки для задачи
+        setSelectedTodoIndex(index);
+        // Открытие или закрытие модального окна
+        setToDoModalOpen(!toDoModalOpen);
+    }
+
     return (
         <div className="mainWrapper">
+            {/* Блок с кнопками */}
             <div className="buttons">
                 <div className="filterbuttons">
                     <button
@@ -90,7 +114,7 @@ function TodoList() {
                     </button>
                 </div>
                 <div className="addbutton">
-                    <button className="plusButton" onClick={() => setModalOpen(true)}></button>
+                    <button className="plusButton" onClick={toggleModal}></button>
                         {addModalOpen && (
                             <div className="modal">
                                 <p>Add New To Do</p>
@@ -98,34 +122,47 @@ function TodoList() {
                                     e.preventDefault();
                                     addTodo(e.target.todoInput.value);
                                     e.target.todoInput.value = "";
-                                    setModalOpen(false); // Закрываем модальное окно после добавления задачи
+                                    toggleModal(); // Закрываем модальное окно после добавления задачи
                                 }}>
                                     <textarea className="addInput" placeholder="Your text" type="text" name="todoInput" />
                                     <button className="modalAddButton" type="submit">Add</button>
                                 </form>
-                                <button className="modalCloseButton" onClick={() => setModalOpen(false)}></button>
+                                <button className="modalCloseButton" onClick={toggleModal}></button>
                             </div>
                         )}
                 </div>
             </div>
+            {/* Блок с заголовком задач */}
             <h1 style={{fontSize: 24, marginTop: 64, marginBottom: 24}}>{(filter === "todo") ? "To Do" : (filter === "done") ? "Done" : (filter === "trash") ? "Trash" : "Я не знаю такой раздел!"}</h1>
             <hr style={{background: "#151517", opacity: 0.2, height: 2, marginBottom: 24}}></hr>
+            {/* Блок с задачами */}
             <div>
                 {filteredTodos.map((todo, index) => (
-                    <div key={index}>
-                        <p style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.task}</p>
-                        {!todo.completed && !todo.deleted && (
-                            <button onClick={() => completeTodo(index)}>Complete</button>
-                        )}
-                        {!todo.deleted && (
-                            <button onClick={() => deleteTodo(index)}>Move to Trash</button>
-                        )}
-                        {todo.deleted && (
-                            <div>
-                                <button onClick={() => restoreTodo(index)}>Move Back To To Do</button>
-                                <button onClick={() => permanentlyDeleteTodo(index)}>Delete Forever</button>
+                    <div className="toDoList" key={index}>
+                        <button className="toDoModalButton" onClick={(event) => toggleToDoModal(event, index)}></button>
+                        {/* Проверка toDoModalOpen на состояние открытого модального окна и соответствия selectedTodoIndex индексу задачи, 
+                        если оба значения true то выводим модальное окно*/}
+                        {toDoModalOpen && selectedTodoIndex === index && (
+                            <div className="toDoModal" style={{
+                                position: 'absolute',
+                                top: selectedButtonCoordinates.y,
+                                left: selectedButtonCoordinates.x,
+                              }}>
+                                {!todo.completed && !todo.deleted && (
+                                    <button className="toDoBtn" onClick={() => completeTodo(index)}><img src={moveBack} alt='img' />Complete</button>
+                                )}
+                                {!todo.deleted && (
+                                    <button className="toDoBtn" onClick={() => deleteTodo(index)}><img src={trash} alt='img' />Move to Trash</button>
+                                )}
+                                {todo.deleted && (
+                                    <>
+                                        <button className="toDoBtn" onClick={() => permanentlyDeleteTodo(index)}><img src={trash} alt='img' />Delete Forever</button>
+                                        <button className="toDoBtn" onClick={() => restoreTodo(index)}><img src={moveBack} alt='img' />Move Back To To Do</button>
+                                    </>
+                                )}
                             </div>
                         )}
+                        <p className="toDoTask" style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.task}</p>
                     </div>
                 ))}
             </div>

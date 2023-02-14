@@ -19,9 +19,6 @@
     letter-spacing: 0em;
     text-align: center;
     border: 0;
-    /* flex: none;
-    order: 2;
-    flex-grow: 0; */
 }
 .notActive {
     display: flex;
@@ -40,9 +37,6 @@
     letter-spacing: 0em;
     text-align: center;
     border: 0;
-    /* flex: none;
-    order: 2;
-    flex-grow: 0; */
 }
 .buttons {
     display: flex;
@@ -90,16 +84,13 @@
 .modal {
     display: flex;
     flex-direction: column;
-    /* align-items: flex-start; */
     padding: 16px;
     gap: 10px;
-
     position: absolute;
     width: 268px;
     height: 234px;
     left: -338px;
     top: -215px;
-
     background: #E4E6E7;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.16);
     border-radius: 12px;
@@ -145,4 +136,45 @@
     background-size: 25px 25px;
     background-repeat: no-repeat;
     background-position: center;
+}
+.toDoList {
+    display: flex;
+}
+.toDoModalButton {
+    border: 0;
+    background-image: url('./img/vector.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 14.5px;
+    display: flex;
+    position: relative;
+}
+.toDoModal {
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    height: fit-content;
+    background: #E4E6E7;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.16);
+    border-radius: 12px;
+    left: 0;
+    top: 0;
+    transform: translate(26px, 44px);
+    padding: 10px 0;
+}
+.toDoBtn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 18px;
+    border: none;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 25px;
+    background: #E4E6E7;
+    padding-left: 10px;
+}
+.toDoBtn:hover {
+    background: rgba(8, 30, 52, 0.2);
 }
