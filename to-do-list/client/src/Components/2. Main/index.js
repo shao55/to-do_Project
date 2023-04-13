@@ -1,4 +1,4 @@
-// Импортируем "useState" из Реакта
+// Импортируем библиотеки
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 // Импортируем стили
@@ -39,45 +39,54 @@ function TodoList() {
 
     // Завершение задачи
     const completeTodo = (id) => {
-        const updatedTodo = todos.find(todo => todo.id === id);
+        const updatedTodo = todos.find(todo => todo._id === id);
         updatedTodo.completed = true;
         updateTodo(id, updatedTodo);
     };
 
     // Отмена завершения задачи
     const uncompleteTodo = (id) => {
-        const updatedTodo = todos.find(todo => todo.id === id);
+        const updatedTodo = todos.find(todo => todo._id === id);
         updatedTodo.completed = false;
         updateTodo(id, updatedTodo);
     };
 
     // Удаление задачи
     const deleteTodo = (id) => {
-        const updatedTodo = todos.find(todo => todo.id === id);
+        const updatedTodo = todos.find(todo => todo._id === id);
         updatedTodo.deleted = true;
         updateTodo(id, updatedTodo);
     };
 
     // Восстановление задачи
     const restoreTodo = (id) => {
-        const updatedTodo = todos.find(todo => todo.id === id);
+        const updatedTodo = todos.find(todo => todo._id === id);
         updatedTodo.deleted = false;
         updateTodo(id, updatedTodo);
     };
 
     // Перемещение задачи в корзину
-    const permanentlyDeleteTodo = (id) => {
-        const updatedTodos = todos.filter(todo => todo.id !== id);
-        setTodos(updatedTodos);
+    const permanentlyDeleteTodo = async (id) => {
+        try {
+            const response = await axios.delete(`http://localhost:8080/${id}`);
+            if (response.status === 200) {
+                const updatedTodos = todos.filter(todo => todo._id !== id);
+                setTodos(updatedTodos);
+            } else {
+                console.error("Ошибка при удалении задачи:", response);
+            }
+        } catch (error) {
+            console.error("Ошибка при удалении задачи:", error);
+        }
     };
 
-
+    // Изменение статуса задачи
     const updateTodo = async (id, updatedTodo) => {
         try {
-            const response = await axios.put(`http://localhost:8080/${updatedTodo.id}`, updatedTodo);
+            const response = await axios.put(`http://localhost:8080/${updatedTodo._id}`, updatedTodo);
             if (response.status === 200) {
                 const newTodos = [...todos];
-                const index = newTodos.findIndex(todo => todo.id === id);
+                const index = newTodos.findIndex(todo => todo._id === id);
                 if (index !== -1) {
                     newTodos[index] = updatedTodo;
                     setTodos(newTodos);
@@ -91,7 +100,6 @@ function TodoList() {
             console.error("Ошибка при обновлении задачи:", error);
         }
     };
-
 
     // Фильтрация задачи для отображения на кнопках
     const filteredTodos = todos.filter(todo => {
@@ -121,7 +129,7 @@ function TodoList() {
         // Открытие или закрытие модального окна
         setToDoModalOpen(!toDoModalOpen);
     }
-
+    // Получение списка задач
     const fetchToDos = async () => {
         try {
             const response = await axios.get("http://localhost:8080/");
@@ -130,15 +138,11 @@ function TodoList() {
             console.log("Ошибка загрузки ToDos", error);
         }
     }
-
+    // Запуск функции получения задач при первом рендере
     useEffect(() => {
         fetchToDos();
     }, []);
-
-    useEffect(() => {
-        console.log("todos изменился!")
-    }, [todos]);
-
+    // Для красоты
     const filterTitles = {
         todo: "To Do",
         done: "Done",
@@ -189,26 +193,26 @@ function TodoList() {
             {/* Блок с задачами */}
             <div>
                 {filteredTodos.map((todo, id) => (
-                    <div className="toDoList" key={todo.id}>
-                        <button className="toDoModalButton" onClick={(event) => toggleToDoModal(event, todo.id)}></button>
+                    <div className="toDoList" key={todo._id}>
+                        <button className="toDoModalButton" onClick={(event) => toggleToDoModal(event, todo._id)}></button>
                         {/* Проверка toDoModalOpen на состояние открытого модального окна и соответствия selectedTodoid индексу задачи, 
                         если оба значения true то выводим модальное окно*/}
-                        {toDoModalOpen && selectedTodoid === todo.id && (
+                        {toDoModalOpen && selectedTodoid === todo._id && (
                             <div className="toDoModal" style={{
                                 position: 'absolute',
                                 top: selectedButtonCoordinates.y,
                                 left: selectedButtonCoordinates.x,
                             }}>
                                 {!todo.completed && !todo.deleted && (
-                                    <button className="toDoBtn" onClick={() => completeTodo(todo.id)}><img src={moveBack} alt='img' />Complete</button>
+                                    <button className="toDoBtn" onClick={() => completeTodo(todo._id)}><img src={moveBack} alt='img' />Complete</button>
                                 )}
                                 {!todo.deleted && (
-                                    <button className="toDoBtn" onClick={() => deleteTodo(todo.id)}><img src={trash} alt='img' />Move to Trash</button>
+                                    <button className="toDoBtn" onClick={() => deleteTodo(todo._id)}><img src={trash} alt='img' />Move to Trash</button>
                                 )}
                                 {todo.deleted && (
                                     <>
-                                        <button className="toDoBtn" onClick={() => permanentlyDeleteTodo(todo.id)}><img src={trash} alt='img' />Delete Forever</button>
-                                        <button className="toDoBtn" onClick={() => restoreTodo(todo.id)}><img src={moveBack} alt='img' />Move Back To To Do</button>
+                                        <button className="toDoBtn" onClick={() => permanentlyDeleteTodo(todo._id)}><img src={trash} alt='img' />Delete Forever</button>
+                                        <button className="toDoBtn" onClick={() => restoreTodo(todo._id)}><img src={moveBack} alt='img' />Move Back To To Do</button>
                                     </>
                                 )}
                             </div>
@@ -221,10 +225,10 @@ function TodoList() {
                                 onChange={() => {
                                     if (todo.completed) {
                                         // Убираем выполнение
-                                        uncompleteTodo(todo.id);
+                                        uncompleteTodo(todo._id);
                                     } else {
                                         // Завершаем задачу
-                                        completeTodo(todo.id);
+                                        completeTodo(todo._id);
                                     }
                                 }}
                             />
