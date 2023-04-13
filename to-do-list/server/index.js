@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const app = express();
 const PORT = 8080;
-const atlasUrl = "mongodb+srv://shao55:RpdfQSz5FdBXjNtb@nurcluster.vhqrmfk.mongodb.net/todoDB";
+const atlasUrl = "SECRET LOGIN AND PASSWORD";
 
 mongoose
     .connect(atlasUrl, { useNewUrlParser: true, useUnifiedTopology: true })
